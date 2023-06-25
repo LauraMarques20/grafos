@@ -33,3 +33,22 @@ class GrafoPonderado:
           self.num_arestas -= 1
         except KeyError as e:
             print(f"AVISO: Aresta {no1} -> {no2} não existe")
+
+    def verifica_aresta(self, no1, no2):
+        try:
+            if self.lista_adj[no1][no2] != None:
+                return True
+        except KeyError as e:
+            return False
+        
+    def verifica_aresta_bidirecional(self, no1, no2):
+        return self.verifica_aresta(no1, no2) and self.verifica_aresta(no2, no1)
+    
+    def soma_um_peso(self, no1, no2):
+        if self.verifica_aresta(no1, no2):
+            peso_atual = self.lista_adj[no1][no2]
+            self.lista_adj[no1][no2] = peso_atual + 1
+        else:
+            print(f"AVISO: Aresta {no1} -> {no2} não existe")
+    
+    
