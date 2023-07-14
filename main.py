@@ -1,11 +1,17 @@
 import pandas as pd
 import grafoPonderado as gp
+import warnings
+from openpyxl import Workbook
+
+# Filter out the specific warning
+warnings.filterwarnings("ignore", category=UserWarning, module='openpyxl')
 
 #criando o grafo ponderado
 g = gp.GrafoPonderado()
 
 #pegando o arquivo com os dados dos votos
 caminho = input("Digite o caminho do arquivo com .xlsx: ")
+print("Processando...")
 df = pd.read_excel(caminho)
 
 #criando os nós
@@ -48,7 +54,9 @@ for no in g.lista_adj:
     for adj in g.lista_adj[no]:
         if (adj, no) not in relacaoDeputadosVotos:
             relacaoDeputadosVotos[(no, adj)] = g.lista_adj[no][adj]
-            relacaoVotos.write(f"{dicDeputados[no]} {dicDeputados[adj]} {g.lista_adj[no][adj]}\n")
+            nomeDeputado = dicDeputados[no].replace(" ", "_")
+            nomeDeputadoAdj = dicDeputados[adj].replace(" ", "_")
+            relacaoVotos.write(f"{nomeDeputado} {nomeDeputadoAdj} {g.lista_adj[no][adj]}\n")
 relacaoVotos.close()
 
 #criando o arquivo de saída com participação de cada deputado em votações
@@ -62,7 +70,8 @@ for votacao in dicVotacoes:
 
 participacao = open("participacao.txt", "w")
 for deputado in votacoesParticipacao:
-    participacao.write(f"{dicDeputados[deputado]} {votacoesParticipacao[deputado]}\n")
+    nomeDep = dicDeputados[deputado].replace(" ", "_")
+    participacao.write(f"{nomeDep} {votacoesParticipacao[deputado]}\n")
 participacao.close()
 
 #mostrar ao usuário os arquivos gerados
